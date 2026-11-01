@@ -1,0 +1,11 @@
+-- Jalankan dari folder utama proyek: psql -d olist_ecommerce_analytics -f sql/01_setup/load_csvs.psql
+-- Folder data/ harus berisi sembilan CSV Olist asli dari Kaggle.
+\copy raw.olist_customers_dataset FROM 'data/olist_customers_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_orders_dataset FROM 'data/olist_orders_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_order_items_dataset FROM 'data/olist_order_items_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_order_payments_dataset FROM 'data/olist_order_payments_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_order_reviews_dataset FROM 'data/olist_order_reviews_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_products_dataset FROM 'data/olist_products_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_sellers_dataset FROM 'data/olist_sellers_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.olist_geolocation_dataset FROM 'data/olist_geolocation_dataset.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');
+\copy raw.product_category_name_translation FROM 'data/product_category_name_translation.csv' WITH (FORMAT csv, HEADER true, ENCODING 'UTF8');

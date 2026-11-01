@@ -1,0 +1,118 @@
+-- Buat measure ini setelah memuat view dari skema analytics.
+-- Pisahkan order_sales dan order_delivery; keduanya memiliki satu baris per pesanan.
+
+Product Sales =
+CALCULATE (
+    SUM ( 'order_sales'[product_sales] ),
+    'order_sales'[order_status] = "delivered"
+)
+
+Freight Charges =
+CALCULATE (
+    SUM ( 'order_sales'[freight_charges] ),
+    'order_sales'[order_status] = "delivered"
+)
+
+Delivered Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_sales'[order_id] ),
+    'order_sales'[order_status] = "delivered"
+)
+
+Sales Valid Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_sales'[order_id] ),
+    'order_sales'[order_status] = "delivered",
+    NOT ( ISBLANK ( 'order_sales'[product_sales] ) )
+)
+
+Average Order Value =
+DIVIDE ( [Product Sales], [Sales Valid Orders] )
+
+Unique Customers =
+DISTINCTCOUNT ( 'customer_summary'[customer_unique_id] )
+
+Repeat Customers =
+CALCULATE (
+    DISTINCTCOUNT ( 'customer_summary'[customer_unique_id] ),
+    'customer_summary'[delivered_orders] >= 2
+)
+
+Repeat Purchase Rate =
+DIVIDE ( [Repeat Customers], [Unique Customers] )
+
+Median Customer Spend =
+MEDIAN ( 'customer_summary'[product_spend] )
+
+Average Delivery Days =
+CALCULATE (
+    AVERAGE ( 'order_delivery'[delivery_days] ),
+    'order_delivery'[order_status] = "delivered",
+    'order_delivery'[delivery_days] >= 0
+)
+
+Late Eligible Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_delivery'[order_id] ),
+    'order_delivery'[order_status] = "delivered",
+    NOT ( ISBLANK ( 'order_delivery'[is_late] ) )
+)
+
+Late Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_delivery'[order_id] ),
+    'order_delivery'[order_status] = "delivered",
+    'order_delivery'[is_late] = TRUE ()
+)
+
+Late Delivery Rate =
+DIVIDE ( [Late Orders], [Late Eligible Orders] )
+
+-- Samakan populasi ulasan dengan review_by_delivery_status:
+-- pesanan delivered, tanggal keterlambatan valid, dan skor tersedia.
+Reviewed Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_delivery'[order_id] ),
+    'order_delivery'[order_status] = "delivered",
+    NOT ( ISBLANK ( 'order_delivery'[is_late] ) ),
+    NOT ( ISBLANK ( 'order_delivery'[avg_review_score] ) )
+)
+
+Average Review Score =
+CALCULATE (
+    AVERAGE ( 'order_delivery'[avg_review_score] ),
+    'order_delivery'[order_status] = "delivered",
+    NOT ( ISBLANK ( 'order_delivery'[is_late] ) )
+)
+
+Low Rating Orders =
+CALCULATE (
+    DISTINCTCOUNT ( 'order_delivery'[order_id] ),
+    'order_delivery'[order_status] = "delivered",
+    NOT ( ISBLANK ( 'order_delivery'[is_late] ) ),
+    NOT ( ISBLANK ( 'order_delivery'[avg_review_score] ) ),
+    'order_delivery'[avg_review_score] <= 2
+)
+
+Low Rating Rate =
+DIVIDE ( [Low Rating Orders], [Reviewed Orders] )
+
+-- Gunakan measure berikut bersama tabel ringkasan yang sesuai pada sumbu visual.
+State Late Rate =
+MAX ( 'delivery_by_state'[late_rate] )
+
+State Late Eligible Orders =
+SUM ( 'delivery_by_state'[eligible_orders] )
+
+Category Late Rate =
+MAX ( 'delivery_by_category'[late_rate] )
+
+Category Late Eligible Orders =
+SUM ( 'delivery_by_category'[eligible_orders] )
+
+-- Opsional: buat tabel tanggal dan hubungkan Calendar[Date] ke order_sales[purchase_date].
+Calendar =
+VAR FirstDate = MINX ( ALL ( 'order_sales' ), 'order_sales'[purchase_date] )
+VAR LastDate = MAXX ( ALL ( 'order_sales' ), 'order_sales'[purchase_date] )
+RETURN
+    CALENDAR ( FirstDate, LastDate )

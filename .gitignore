@@ -1,0 +1,19 @@
+# Data mentah Olist: simpan lokal, jangan unggah ke GitHub.
+olist_*_dataset.csv
+product_category_name_translation.csv
+data/olist_*_dataset.csv
+data/product_category_name_translation.csv
+
+# Cache dan pengaturan lokal Power BI.
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
+# Kredensial dan kunci lokal.
+.env
+.env.*
+!.env.example
+.pgpass
+.pg_service.conf
+*.pem
+*.key
+*.p12
