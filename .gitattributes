@@ -1,0 +1,3 @@
+# Tampilkan SQL dalam statistik bahasa GitHub.
+*.sql linguist-detectable
+*.psql linguist-language=SQL linguist-detectable

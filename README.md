@@ -1,6 +1,8 @@
 # E-Commerce Sales & Delivery Performance Analytics
 
-Di proyek ini saya mengolah data publik Olist Brasil untuk melihat penjualan, kebiasaan belanja pelanggan, dan ketepatan pengiriman. Analisisnya memakai PostgreSQL dan SQL, lalu hasilnya disiapkan untuk divisualisasikan di Power BI. Data yang digunakan mencakup pesanan dari September 2016 sampai Oktober 2018.
+**Teknologi:** PostgreSQL, SQL, dan Power BI (DAX)
+
+Saya mengolah data publik Olist Brasil untuk melihat penjualan, kebiasaan belanja pelanggan, dan ketepatan pengiriman. Data yang digunakan mencakup pesanan dari September 2016 sampai Oktober 2018.
 
 ## Pertanyaan yang saya bahas
 
